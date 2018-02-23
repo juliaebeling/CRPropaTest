@@ -100,7 +100,7 @@ double HadronicInteraction::CrossSection_Galprop(double energy) const{
 //Cross Section of inelastic pp interaction based on Kelner 2006
 double HadronicInteraction::CrossSection_Kelner(double energy) const{
 		double L=log(energy / TeV);
-		double A=(1-pow(1.22*1e-3/energy), 4.)
+		double A=1-pow(1.22*1e-3*TeV/energy, 4.);
 		double cs_inel=(34.3 + 1.88*L+0.25 *L*L)*A*A*1e-31;
 		return cs_inel;
 }
