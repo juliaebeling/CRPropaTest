@@ -14,9 +14,14 @@ class HadronicInteraction: public Module {
 public:
 	HadronicInteraction( );
 	void process(Candidate *candidate) const;
+	double distribution_pi(double energy, double x) const;
 	double distribution_e(double energy, double x) const;
 	double distribution_my1(double energy, double x) const; 
 	double distribution_gamma(double energy, double x) const; 
+	double number_pi(double energy) const;
+	double number_e(double energy) const;
+	double number_my1(double energy) const;
+	double number_gamma(double energy) const;
 	double distribution_Carceller(double energy, double x, double jcap, double a0, double b0) const;
 	double distribution_Carceller_g(double energy, double x, double jcap, double a0, double b0) const;
 	double CrossSection_Carceller(double energy) const;
