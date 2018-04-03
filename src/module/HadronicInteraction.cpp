@@ -16,6 +16,35 @@ HadronicInteraction::HadronicInteraction() {
 	setDescription("HadronicInteraction");
 }
 
+//Energy distribution for pions
+
+double HadronicInteraction::distribution_pi(double energy, double x) const{
+	double L=log(energy/TeV);
+	double Bp=5.58+0.78*L+0.1*L*L;
+	double r=3.1/pow(Bp, 1.5);
+	double a=0.89/(pow(Bp, 0.5)*(1-exp(-0.33*Bp)));
+	double mp=134.9766*MeV;
+	double A=4*a*Bp*pow(x, a-1);
+	double B=(1-pow(x,a))/(1+r*pow(x,a)*(1-pow(x,a)));
+	double C=(1/(1-pow(x,a))+(r*(1-2*pow(x,a))/(1+r*pow(x,a)*(1-pow(x,a)))))*pow(1-mp/(x*energy), 0.5);
+	double F=A*pow(B, 4.)*C;
+	
+	return F;
+}
+
+double HadronicInteraction::number_pi(double energy) const{
+	double x=1/1000.;
+	double i=1/100000.;
+	double y=0;
+	double j=0;
+	do{
+	y=y+distribution_pi(energy,x);
+	x=x+i;
+	j++;
+	}while(x < 1);
+	return y/j*(x-1/1000.);
+}
+
 //Energy distribution for electron, electron neutrino and second muon neutrino based on Kelner 2006
 
 double HadronicInteraction::distribution_e(double energy, double x) const{
@@ -28,12 +57,29 @@ double HadronicInteraction::distribution_e(double energy, double x) const{
 	
 	return F;
 }
+
+double HadronicInteraction::number_e(double energy) const{
+	double x=1/1000.;
+	double i=1/100000.;
+	double y=0;
+	double j=0;
+	do{
+	y=y+distribution_e(energy,x);
+	x=x+i;
+	j++;
+	}while(x < 1);
+	return y/j*(x-1/1000.);
+}
+
+
+
 //Energy distribution for first muon neutrino based on Kelner 2006
 double HadronicInteraction::distribution_my1(double energy, double x) const{
 	double L=log(energy / TeV);
 	double Bm= 1.75+0.204*L+0.01 * pow(L,2.);
 	double betam=1/(1.67+0.111*L+0.0038*pow(L,2.));
 	double km=1.07-0.086*L+0.002*pow(L,2.);
+	x=x/0.427;
 	double aa=(1-pow(x,betam))/(1+km*pow(x, betam)*(1-pow(x,betam)));
 	double A=Bm*log(x)/x*pow(aa, 4.);
 	double B=1/log(x)-4*betam*pow(x,betam)/(1- pow(x,betam))-4*km*betam*pow(x, betam)*(1-2*pow(x,betam))/(1+km*pow(x,betam)*(1-pow(x,betam)));
@@ -42,6 +88,18 @@ double HadronicInteraction::distribution_my1(double energy, double x) const{
 	return F;
 }
 
+double HadronicInteraction::number_my1(double energy) const{
+	double x=1/1000.;
+	double i=1/100000.;
+	double y=0;
+	double j=0;
+	do{
+	y=y+distribution_my1(energy,x);
+	x=x+i;
+	j++;
+	}while(x < 1);
+	return y/j*(x-1/1000.);
+}
 //Energy distribution for gamma photons based on Kelner 2006
 double HadronicInteraction::distribution_gamma(double energy, double x) const{
 	double L=log(energy / TeV);
@@ -56,6 +114,18 @@ double HadronicInteraction::distribution_gamma(double energy, double x) const{
 	return F;
 }
 
+double HadronicInteraction::number_gamma(double energy) const{
+	double x=1/1000.;
+	double i=1/100000.;
+	double y=0;
+	double j=0;
+	do{
+	y=y+distribution_gamma(energy,x);
+	x=x+i;
+	j++;
+	}while(x < 1);
+	return y/j*(x-1/1000.);
+}
 //Energy distribution for lepton secondaries of pp interactions based on Carceller 2017
 
 double HadronicInteraction::distribution_Carceller(double energy, double x, double jcap, double a0, double b0) const{
@@ -100,7 +170,7 @@ double HadronicInteraction::CrossSection_Galprop(double energy) const{
 //Cross Section of inelastic pp interaction based on Kelner 2006
 double HadronicInteraction::CrossSection_Kelner(double energy) const{
 		double L=log(energy / TeV);
-		double A=(1-pow(1.22*1e-3/energy), 4.)
+		double A=1-pow(1.22*1e-3*TeV/energy, 4.);
 		double cs_inel=(34.3 + 1.88*L+0.25 *L*L)*A*A*1e-31;
 		return cs_inel;
 }
@@ -118,7 +188,10 @@ void HadronicInteraction::process(Candidate *candidate) const {
   double step = candidate->getCurrentStep();
   double energy = candidate->current.getEnergy();
   double id = candidate->current.getId();
-  //~ std::cout << id << std::endl; 
+  //~ if (energy < 10 * TeV){
+	  //~ return;
+	  //~ }
+
 if (id < 500){
 	return;
 			}
@@ -138,9 +211,9 @@ if (id == 1000010010) {
 					  }
 
 
-	if (id == 1000010010){
-	cs_inel=CrossSection_Carceller(energy);
-						 }
+	//~ if (id == 1000010010){
+	//~ cs_inel=CrossSection_Carceller(energy);
+						 //~ }
 
 
 if (id == 1000020040 and energy > 1* TeV) {
@@ -165,9 +238,9 @@ if (id == 1000260056 and energy > 1* TeV) {
 
 Random &random = Random::instance();
 
-double p_pp=cs_inel*1e6*step;
+double density=1e6;
+double p_pp=cs_inel*density*step;
 double ra = random.rand();
-
 
   if (ra > p_pp or energy < 1*GeV){
 
@@ -176,13 +249,13 @@ double ra = random.rand();
 	  }
 
 
-double limit = 1 / p_pp;
+double limit = 1 / p_pp*0.1;
 
-//~ if (step > limit) {
-			//~ // limit next step to mean free path
-			//~ candidate->limitNextStep(limit);
+if (step > limit) {
+			// limit next step to mean free path
+			candidate->limitNextStep(limit);
 	
-//~ }
+}
 double Eout=0;
 
 
@@ -192,7 +265,7 @@ double Ene;
 double Emt;
 double Eg;
 double gamma=0;
-double test=1;
+double test=0;
 //~ goto label2;
 if (jcap == 1)
 {
@@ -204,97 +277,156 @@ label:
 
 //~ Gamma rays
 
-	do{
-	double x=random.rand()*(-3);
-	double F=distribution_gamma(energy, pow(10, x));
-	double Fmax=distribution_gamma(energy, 0.001);
-	double y=random.rand()*Fmax;
 
-		if (y < F){
-			double Eout=pow(10, x)*energy;
-			candidate->addSecondary(22, Eout, pos);
-			gamma++;
-			Eg=Eout;
-			//~ std::cout<<"A"<< std::endl;
-			}
-		}while (gamma ==0);
+	
+	double r=random.rand();
+	double F=number_gamma(energy);
+	std::cout << F << std::endl; 
+	double N=std::floor(F);
+	double Econ=0;
+	
+	if (r < F-N){
+		N=N+1;
+	}
 
-
-//~ First myon neutrino
-	do {
-	double x=random.rand()*(-3);
-	double F=distribution_my1(energy, pow(10, x));
-	double Fmax=distribution_my1(energy, 0.001);
-	double y=random.rand()*Fmax;
-		if (y < F){
-			double Eout=pow(10, x)*energy;
-			candidate->addSecondary(14, Eout, pos);
-			test=2;
-			Emo=Eout;
-			//~ std::cout<<"B"<< std::endl;
-		}
-		} while (test == 1);
-
-//~ Electron
-	do {
-	double x=random.rand()*(-3);
-
-	double F=distribution_e(energy, pow(10, x));
-	double k=0.001;
-	double Fmax=distribution_e(energy, 0.001);
-	double Eout=F;
-	double y=random.rand()*Fmax;
-	Eout=pow(10, x)*energy;
-		if (y < F and (Eout+Emo)<energy){
-			candidate->addSecondary(11, Eout, pos);
-			test=3;
-			Ee=Eout;
-			//~ std::cout<<"C"<< std::endl;
-					}
-		} while (test == 2);
-
-//~ Electron neutrino
-	do {
-	double x=random.rand()*(-3);
-
-	double F=distribution_e(energy, pow(10, x));
-	double Fmax=distribution_e(energy, 0.001);
-	double y=random.rand()*Fmax;
-	double Eout=pow(10, x)*energy;
-		if (y < F and (Eout+Emo)<energy){
-			candidate->addSecondary(12, Eout, pos);
-			test=4;
-			Ene=Eout;
-			//~ std::cout<<"D"<< std::endl;
-				}
-
-		} while (test == 3);
-
-
-//~ Second myon neutrino
-		do {
-	double x=random.rand()*(-3);
-
-
-	double F=distribution_e(energy, pow(10, x));
-	double Fmax=distribution_e(energy, 0.001);
-	double y=random.rand()*Fmax;
-	double Eout=pow(10, x)*energy;
-		if (y < F and (Eout+Emo)<energy){
-			candidate->addSecondary(14, Eout, pos);
-			test=5;
-			//~ std::cout<<"E"<< std::endl;
-					}
-		} while (test == 4);
+	double i=1;
+		do{
+			double x=random.rand()*(-3);
+			 Eout=pow(10, x)*energy;
+			double E=distribution_gamma(energy, pow(10, x));
+			double Emax=distribution_gamma(energy, 0.001);
+			double y=random.rand()*Emax;
+			double Eoutg=pow(10, x)*energy;
+			double Et=Econ+Eout;
+			if (y < E and Et < energy){
+				candidate->addSecondary(22, Eout, pos);
+				Econ=Econ+Eout;
+				i++;
+				std::cout << Econ/energy << std::endl;}
+			}while (i <= N);
 		
-	if (Ee+Ene+Emt+Emo+Eg > energy)
+	Eg=Econ;
+	Econ=0;
+
+
+
+//~ First myon neutrino 14
+
+	r=random.rand();
+	F=number_my1(energy);
+	std::cout << F << std::endl;
+	N=std::floor(F);
+	if (r < F-N){
+		N=N+1;
+	}
+	i=1;
+			do{
+			double x=random.rand()*(-3);
+			 Eout=pow(10, x)*energy;
+			double E=distribution_my1(energy, pow(10, x));
+			double Emax=distribution_my1(energy, 0.001);
+			double y=random.rand()*Emax;
+			double Et=Econ+Eout;
+			double Eout=pow(10, x)*energy;
+			if (y < E and Et< (energy-Eg)){
+				candidate->addSecondary(14, Eout, pos);
+				Econ=Econ+Eout,
+				std::cout << Econ/energy << std::endl;
+				i++;}
+			}while (i <= N);
+	Emo=Econ;
+	Econ=0;
+
+
+//~ Electron 22
+
+	r=random.rand();
+	F=number_e(energy);
+	std::cout << F << std::endl;
+	N=std::floor(F);
+	if (r < F-N){
+		N=N+1;
+	}
+	i=1;
+		do{
+		double x=random.rand()*(-3);
+		 Eout=pow(10, x)*energy;
+		double E=distribution_e(energy, pow(10, x));
+		double Emax=distribution_e(energy, 0.001);
+		double y=random.rand()*Emax;
+		double Et=Econ+Eout;
+		double Eout=pow(10, x)*energy;
+		if (y < E and Et < (energy-Emo-Eg)){
+			candidate->addSecondary(22, Eout, pos);
+			Econ=Econ+Eout;
+			std::cout << Econ/energy << std::endl;
+			i++;}
+		}while (i <= N);
+	Ee=Econ;
+	Econ=0;
+
+
+//~ Electron neutrino 12
+
+	r=random.rand();
+	std::cout << F << std::endl;
+
+	if (r < F-N){
+		N=N+1;
+	}
+	i=1;
+	do{
+		double x=random.rand()*(-3);
+		 Eout=pow(10, x)*energy;
+		double E=distribution_e(energy, pow(10, x));
+		double Emax=distribution_e(energy, 0.001);
+		double y=random.rand()*Emax;
+		double Et=Econ+Eout;
+		double Eout=pow(10, x)*energy;
+		if (y < E and Et < (energy-Emo-Eg-Ee)){
+			candidate->addSecondary(12, Eout, pos);
+			Econ=Econ+Eout;
+			std::cout << Econ/energy << std::endl;
+			i++;}
+		}while (i <= N);
+	Ene=Econ;
+	Econ=0;
+
+
+//~ Second myon neutrino 14
+
+	r=random.rand();
+	std::cout << F << std::endl;
+
+	if (r < F-N){
+		N=N+1;
+	}
+	i=1;
+	do{
+		double x=random.rand()*(-3);
+		 Eout=pow(10, x)*energy;
+		double E=distribution_e(energy, pow(10, x));
+		double Emax=distribution_e(energy, 0.001);
+		double y=random.rand()*Emax;
+		double Eout=pow(10, x)*energy;
+		if (y < F and Econ < (energy-Emo-Eg-Ee-Ene)){
+			candidate->addSecondary(14, Eout, pos);
+			Econ=Econ+Eout;
+			std::cout << 's' << Econ/energy << std::endl;
+			i++;}
+		}while (i <= N);
+	Emt=Econ;
+	Econ=0;
+		
+	if (Ee+Ene+Emt+Emo+Eg> energy)
 		{
 		std::cout << "H";
-		goto label;
+
 		}
 	candidate->current.setEnergy(energy-(Ee+Ene+Emt+Emo+Eg));
-	//~ std::cout<<"ret"<<std::endl;
+	std::cout << (Ee+Ene+Emt+Emo+Eg)/energy << std::endl;
 	return;
+
 
 label2: 
 test = 1; 
