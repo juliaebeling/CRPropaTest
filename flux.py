@@ -51,12 +51,12 @@ for i in range (len(data1.ID)):
 
 #Einlesen der verschiedenen Teilchen
 for i in range (len(data2.ID)):
-	#~ if data2.ID[i]==11:
-		#~ e_dist_e.append(data2.E[i]*EeV)
-	#~ if data2.ID[i]==14 or data2.ID[i]==-14 :
-		#~ e_dist_my.append(data1.E[i]*EeV)
-	#~ if data2.ID[i]==12 or data2.ID[i]==-12 :
-		#~ e_dist_ne.append(data2.E[i]*EeV)
+	if data2.ID[i]==11:
+		e_dist_e.append(data2.E[i]*EeV)
+	if data2.ID[i]==14 or data2.ID[i]==-14 :
+		e_dist_my.append(data1.E[i]*EeV)
+	if data2.ID[i]==12 or data2.ID[i]==-12 :
+		e_dist_ne.append(data2.E[i]*EeV)
 	if data2.ID[i]==22:
 		e_dist2_g.append(data2.E[i]*EeV)
 
@@ -85,18 +85,15 @@ binMiddle2_g=(binEdges2_g[1:]-binEdges2_g[:-1])/2.+binEdges2_g[:-1]
 
 
 
-#~ plt.plot(binMiddle_e, h, linewidth=0., marker='s', label = 'Electrons')
-#~ plt.plot(binMiddle_my, my,linewidth=0., marker='s', label='Muon Neutrinos')
+plt.plot(binMiddle_e, h, linewidth=0., marker='s', label = 'Electrons')
+plt.plot(binMiddle_my, my,linewidth=0., marker='s', label='Muon Neutrinos')
 plt.plot(binMiddle_g, g,linewidth=0., marker='s', label='Gamma rays')
 
-#~ plt.plot(binMiddle2_e, h2, linewidth=0., marker='s', label = 'Electrons2')
-#~ plt.plot(binMiddle2_my, my2,linewidth=0., marker='s', label='Muon Neutrinos2')
+plt.plot(binMiddle2_e, h2, linewidth=0., marker='s', label = 'Electrons2')
+plt.plot(binMiddle2_my, my2,linewidth=0., marker='s', label='Muon Neutrinos2')
 plt.plot(binMiddle2_g, g2, label='Gamma rays2')
 
 plt.legend(loc='upper right')
 plt.loglog()
-#~ plt.scatter(x_compare, y_compare, color='red')
-#~ plt.plot(e_dist_x, e_dist_p)
-#~ #plt.scatter(x, e_dist, facecolor='red', edgecolor='none')
 plt.show()
 fig=plt.figure()
