@@ -79,7 +79,6 @@ namespace crpropa {
         double Bm= 1.75+0.204*L+0.01 * pow(L,2.);
         double betam=1/(1.67+0.111*L+0.0038*pow(L,2.));
         double km=1.07-0.086*L+0.002*pow(L,2.);
-        x=x/0.427;
         double aa=(1-pow(x,betam))/(1+km*pow(x, betam)*(1-pow(x,betam)));
         double A=Bm*log(x)/x*pow(aa, 4.);
         double B=1/log(x)-4*betam*pow(x,betam)/(1- pow(x,betam))-4*km*betam*pow(x, betam)*(1-2*pow(x,betam))/(1+km*pow(x,betam)*(1-pow(x,betam)));
@@ -89,7 +88,7 @@ namespace crpropa {
     }
     
     double HadronicInteraction::number_my1(double energy) const{
-        double x=1/1000.;
+        double x=1/(1000.);
         double i=1/100000.;
         double y=0;
         double j=0;
@@ -353,7 +352,7 @@ namespace crpropa {
                         i++;
                         iG++;
                         //std::cout<<(Ee+Ene+Emt+Emo+Eg)/energy<<std::endl;
-                        //std::cout<<Eout/energy<<std::endl;
+                        std::cout<<"GammaE"<<std::endl;
                     }
                 if (y < E and (Ee+Ene+Emt+Emo+Eg+Eout)<energy ){
                     candidate->addSecondary(22, Eout, pos);
@@ -371,9 +370,10 @@ namespace crpropa {
             if (imy1 <= Nmy1){
                 do{
                 double x=random.rand()*(-3);
+                double my=pow(10,x)*0.427;
                     j++;
-                Eout=pow(10, x)*energy;
-                double E=distribution_my1(energy, pow(10, x));
+                Eout=my*energy;
+                double E=distribution_my1(energy, my);
                 double Emax=distribution_my1(energy, 0.001);
                 double y=random.rand()*Emax;
                 if(j == 10000){
@@ -384,7 +384,7 @@ namespace crpropa {
                     i++;
                     imy1++;
                     //std::cout<<(Ee+Ene+Emt+Emo+Eg)/energy<<std::endl;
-                    //std::cout<<Eout/energy<<std::endl;
+                    std::cout<<"My1"<<std::endl;
                     }
                 if (y < E and (Ee+Ene+Emt+Emo+Eg+Eout)<energy){
                     candidate->addSecondary(14, Eout, pos);
@@ -396,7 +396,7 @@ namespace crpropa {
             }while(test == imy1);
             }
   
-            //~ Electron 22
+            //~ Electron 11
 
         test=ie;
         j=0;
@@ -412,15 +412,15 @@ namespace crpropa {
                     if(j == 10000){
                         x=-5;
                         Eout=pow(10, x)*energy;
-                        candidate->addSecondary(22, Eout, pos);
+                        candidate->addSecondary(11, Eout, pos);
                         Ee=Ee+Eout;
                         i++;
                         ie++;
                         //std::cout<<(Ee+Ene+Emt+Emo+Eg)/energy<<std::endl;
-                        //std::cout<<Eout/energy<<std::endl;
+                        std::cout<<"eE"<<std::endl;
                                     }
                 if (y < E and (Ee+Ene+Emt+Emo+Eg+Eout)<energy ){
-                    candidate->addSecondary(22, Eout, pos);
+                    candidate->addSecondary(11, Eout, pos);
                     Ee=Ee+Eout;
                     //std::cout << Econ/energy << std::endl;
                     i++;
@@ -449,7 +449,7 @@ namespace crpropa {
                         i++;
                         ien++;
                         //std::cout<<(Ee+Ene+Emt+Emo+Eg)/energy<<std::endl;
-                        //std::cout<<Eout/energy<<std::endl;
+                        std::cout<<"neE"<<std::endl;
                         }
             if (y < E and (Ee+Ene+Emt+Emo+Eg+Eout)<energy){
                 candidate->addSecondary(12, Eout, pos);
@@ -480,7 +480,7 @@ namespace crpropa {
                         i++;
                         imy2++;
                         //std::cout<<(Ee+Ene+Emt+Emo+Eg)/energy<<std::endl;
-                        //std::cout<<Eout/energy<<std::endl;
+                        std::cout<<"my2E"<<std::endl;
                         }
             if (y < E and (Ee+Ene+Emt+Emo+Eg+Eout)<energy){
                 candidate->addSecondary(14, Eout, pos);
