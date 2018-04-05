@@ -79,6 +79,7 @@ namespace crpropa {
         double Bm= 1.75+0.204*L+0.01 * pow(L,2.);
         double betam=1/(1.67+0.111*L+0.0038*pow(L,2.));
         double km=1.07-0.086*L+0.002*pow(L,2.);
+        x=x/0.427;
         double aa=(1-pow(x,betam))/(1+km*pow(x, betam)*(1-pow(x,betam)));
         double A=Bm*log(x)/x*pow(aa, 4.);
         double B=1/log(x)-4*betam*pow(x,betam)/(1- pow(x,betam))-4*km*betam*pow(x, betam)*(1-2*pow(x,betam))/(1+km*pow(x,betam)*(1-pow(x,betam)));
@@ -285,7 +286,7 @@ namespace crpropa {
         //First myon neutrino
         r=random.rand();
         double Fmy1=number_my1(energy);
-        //std::cout<<"Fmy1="<<Fmy1<<std::endl;
+//      std::cout<<"Fmy1="<<Fmy1<<std::endl;
         double Nmy1=std::floor(Fmy1);
         if (r < Fmy1-Nmy1){
             Nmy1=Nmy1+1;
@@ -294,7 +295,7 @@ namespace crpropa {
         //Electron
         r=random.rand();
         double FE=number_e(energy);
-        //std::cout<<"FE="<<FE<<std::endl;
+//        std::cout<<"FE="<<FE<<std::endl;
         double NE=std::floor(FE);
         if (r < FE-NE){
             NE=NE+1;
@@ -369,8 +370,9 @@ namespace crpropa {
             j=0;
             if (imy1 <= Nmy1){
                 do{
-                double x=random.rand()*(-3);
-                double my=pow(10,x)*0.427;
+                label3:
+                double x=-3+random.rand()*(log(0.427)+3);
+                double my=pow(10,x);
                     j++;
                 Eout=my*energy;
                 double E=distribution_my1(energy, my);
