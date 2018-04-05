@@ -30,21 +30,32 @@ l=0
 test=0
 for i in range (nop-100):
     xv=(i+1)/100000.
-    if (xv > (0.001*0.427) and xv <1):
+    if (xv > (0.001) and xv <1):
         x_my[l]=xv
         L=log(E/ TeV)
         Bm= 1.75+0.204*L+0.01 * pow(L,2.)
         betam=1/(1.67+0.111*L+0.0038*pow(L,2.))
         km=1.07-0.086*L+0.002*pow(L,2.)
-        y=xv*0.427
+        y=xv/0.427
         aa=(1-pow(y,betam))/(1+km*pow(y, betam)*(1-pow(y,betam)))
         A=Bm*log(y)/y*pow(aa, 4.)
         B=1/log(y)-4*betam*pow(y,betam)/(1- pow(y,betam))-4*km*betam*pow(y, betam)*(1-2*pow(y,betam))/(1+km*pow(y,betam)*(1-pow(y,betam)))
         F=A*B
-        y_my[l]=F*xv**2
-        y_c[l]=(h.distribution_my1(E, xv))*xv**2
-        y_g_K[l]=(h.distribution_gamma(E, xv))*xv**2
+        
+        if xv < 0.427:
+            y_c[l]=h.distribution_my1(E, xv)
+            y_my[l]=h.distribution_e(E,xv)
+            y_g_C[l]=h.distribution_my1(E, xv)
+        y_g_K[l]=(h.distribution_gamma(E, xv))
+        y_g_C[l]=h.distribution_e(E,xv)+y_g_C[l]
         l=l+1
+integral_K=np.sum(y_g_K)/len(x_my)*(np.max(x_my)-np.min(x_my))
+        
+print integral_K
+integral_my=np.sum(y_my)/len(x_my)*(np.max(x_my)-np.min(x_my))
+print integral_my
+print h.number_my1(0.1*TeV)
+
 
 
 #~ for i in range (1):
@@ -96,20 +107,20 @@ for i in range (nop-100):
 
 
 fig=plt.figure()
-#~ plt.xlim(10**(-10), 1)
-#~ plt.ylim(0.001, 1000)
+plt.xlim(10**(-3), 1)
+plt.ylim(0.001, 0.1)
 #plt.xlabel('Energy E/E_p')
 #plt.ylabel('f*x**2')
 #plt.plot(x_g, y_g_K, color='blue', label='$\gamma$ Kelner et al 2006')
-#plt.plot(x_g, y_g_C, color='blue', label='Hydrogen')
+plt.plot(x_my, y_g_C*x_my**2, color='dodgerblue', label='Hydrogen')
 #plt.plot(x_g, y_g_K2, color='green', label='   Kelner et al 2006')
 #plt.plot(x_g, y_g_C2, color='green', label='Helium')
 #plt.plot(x_g, y_g_K3, color='red', label='    Kelner et al 2006')
 #plt.plot(x_g, y_g_C1, color='red', label='Iron')
 
-plt.plot(x_my, y_g_K, label='Gamma', color='blue')
-plt.plot(x_my, y_my, label='Myp', color='red')
-plt.plot(x_my, y_c, label='MyHI', color='green')
+plt.plot(x_my, y_g_K*x_my**2, label='Gamma', color='blue')
+plt.plot(x_my, y_my*x_my**2, label='Myp', color='red')
+plt.plot(x_my, y_c*x_my**2, label='MyHI', color='green')
 #plt.plot(Sb_x, Sb_y, marker='.', linewidth=0, color='grey', label='SIBYLL')
 #plt.plot(R_x, R_y, marker='.', linewidth=0, color='black', label='IHEP')
 
