@@ -242,7 +242,7 @@ namespace crpropa {
         double p_pp=cs_inel*density*step;
         double ra = random.rand();
         
-        if (ra > p_pp or energy < 1*GeV){
+        if (ra > p_pp or energy < 1*GeV or energy != 1000*TeV){
             
             return;
             
@@ -389,7 +389,7 @@ namespace crpropa {
                     std::cout<<"My1"<<std::endl;
                     }
                 if (y < E and (Ee+Ene+Emt+Emo+Eg+Eout)<energy){
-                    candidate->addSecondary(14, Eout, pos);
+                    candidate->addSecondary(12, Eout, pos);
                     Emo=Emo+Eout;
                     //std::cout << Econ/energy << std::endl;
                     i++;
@@ -446,7 +446,7 @@ namespace crpropa {
                         x=-5;
                         Eout=pow(10, x)*energy;
                         y=distribution_gamma(energy, pow(10, x));
-                        candidate->addSecondary(12, Eout, pos);
+//                        candidate->addSecondary(12, Eout, pos);
                         Ene=Ene+Eout;
                         i++;
                         ien++;
@@ -454,7 +454,7 @@ namespace crpropa {
                         std::cout<<"neE"<<std::endl;
                         }
             if (y < E and (Ee+Ene+Emt+Emo+Eg+Eout)<energy){
-                candidate->addSecondary(12, Eout, pos);
+//                candidate->addSecondary(12, Eout, pos);
                 Ene=Ene+Eout;
                 //std::cout << Econ/energy << std::endl;
                 i++;
