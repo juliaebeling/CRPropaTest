@@ -25,7 +25,7 @@ y_g_C1=np.zeros(nop)
 y_g_C2=np.zeros(nop)
 y_c=np.zeros(nop)
 y_cg=np.zeros(nop)
-E=10*TeV
+E=1000*TeV
 l=0
 test=0
 for i in range (nop-100):

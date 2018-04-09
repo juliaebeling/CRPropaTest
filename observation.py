@@ -6,7 +6,7 @@ import pandas as pd
 import math
 
 #Number of particles
-particles = 10000
+particles = 100000
 
 
 
@@ -20,7 +20,7 @@ r= 10* Mpc
 
 
 #Energy
-E = 0.1 * TeV
+E = 1000 * TeV
 Energyvector=[]
 
 
@@ -30,7 +30,7 @@ source= Source()
 source.add(SourceEnergy(E))
 source.add(SourceParticleType(nucleusId(1,1)))
 source.add(SourcePosition(Vector3d(0)))
-output = TextOutput("Transfers/CCompareKelner_Part"+str(particles)+"_SourceE"+str(E/TeV)+"_Step"+str(steplength)+"kpc_Obs"+str(r/ Mpc)+"Mpc_Sprotons.txt")
+output = TextOutput("Transfers/CC2ompareKelner_Part"+str(particles)+"_SourceE"+str(E/TeV)+"_Step"+str(steplength)+"kpc_Obs"+str(r/ Mpc)+"Mpc_Sprotons.txt")
 output.disableAll()
 #output.enable(output.SerialNumberColumn)
 output.enable(output.CurrentIdColumn)
