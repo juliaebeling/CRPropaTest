@@ -3,6 +3,7 @@
 #include "crpropa/ParticleID.h"
 #include "crpropa/ParticleMass.h"
 #include "crpropa/Random.h"
+#include "crpropa/module/MassDis.h"
 
 #include <fstream>
 #include <limits>
@@ -237,12 +238,14 @@ namespace crpropa {
         
         
         Random &random = Random::instance();
-        
-        double density=1e6;
+        double posx=pos.x;
+        double posy=pos.y;
+        double posz=pos.z;
+        double density=MassDis::NGC253(posx, posy, posz);
         double p_pp=cs_inel*density*step;
         double ra = random.rand();
         
-        if (ra > p_pp or energy < 1*GeV or energy != 1000*TeV){
+        if (ra > p_pp or energy < 1*GeV){
             
             return;
             
@@ -317,6 +320,7 @@ namespace crpropa {
         }
         
         double N_tot=NG+Nmy1+NE+NEN+Nmy2;
+        std::cout<<N_tot<<std::endl;
         
   
         
