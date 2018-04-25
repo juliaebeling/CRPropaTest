@@ -37,6 +37,7 @@
 #include "crpropa/module/HDF5Output.h"
 #include "crpropa/module/NuclearDecay.h"
 #include "crpropa/module/HadronicInteraction.h"
+#include "crpropa/module/MassDis.h"
 #include "crpropa/module/Observer.h"
 #include "crpropa/module/OutputShell.h"
 #include "crpropa/module/ParticleCollector.h"
