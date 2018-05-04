@@ -320,7 +320,7 @@ namespace crpropa {
         }
         
         double N_tot=NG+Nmy1+NE+NEN+Nmy2;
-        std::cout<<N_tot<<std::endl;
+        //std::cout<<N_tot<<std::endl;
         
   
         

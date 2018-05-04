@@ -1,4 +1,4 @@
-#include "crpropa/module/PropagationCK.h"
+ #include "crpropa/module/PropagationCK.h"
 
 #include <limits>
 #include <sstream>
@@ -120,10 +120,12 @@ void PropagationCK::setField(ref_ptr<MagneticField> f) {
 }
 
 void PropagationCK::setTolerance(double tol) {
+    
 	if ((tol > 1) or (tol < 0))
 		throw std::runtime_error(
-				"PropagationCK: target error not in range 0-1");
+				"PropagationCK: target error not in range 0-1" );
 	tolerance = tol;
+    
 }
 
 void PropagationCK::setMinimumStep(double min) {

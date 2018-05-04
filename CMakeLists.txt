@@ -340,6 +340,7 @@ add_library(crpropa SHARED
 	src/Variant.cpp
 	src/module/Boundary.cpp
 	src/module/BreakCondition.cpp
+    src/module/CreateElectrons.cpp
 	src/module/DiffusionSDE.cpp
 	src/module/EMCascade.cpp
 	src/module/EMDoublePairProduction.cpp

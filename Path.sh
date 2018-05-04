@@ -1,2 +1,2 @@
-declare -x PYTHONPATH="/Users/juliaebeling/CRPropaTest/lib/python2.7/site-packages/crpropa:/Users/juliaebeling/CRPropaTest/python/"
-declare -x LD_LIBRARY_PATH="/Users/juliaebeling/CRPropaTest/lib/"
+declare -x PYTHONPATH="/Volumes/Samsung_T5/Studium/CRPropaTest/lib/python2.7/site-packages/crpropa:/Volumes/Samsung_T5/Studium/CRPropaTest/python/"
+declare -x LD_LIBRARY_PATH="/Volumes/Samsung_T5/Studium/CRPropaTest/lib/"

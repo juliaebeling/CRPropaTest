@@ -6,7 +6,7 @@ import pandas as pd
 import math
 
 #Number of particles
-particles = 500000000
+particles = 10000
 
 
 
@@ -30,7 +30,7 @@ source= Source()
 source.add(SourceEnergy(E))
 source.add(SourceParticleType(nucleusId(1,1)))
 source.add(SourcePosition(Vector3d(0)))
-output = TextOutput("Transfers/WithMassDis_Part"+str(particles)+"_SourceE"+str(E/TeV)+"_Step"+str(steplength)+"kpc_Obs"+str(r/ Mpc)+"Mpc_Sprotons.txt")
+output = TextOutput("Transfers/NGC253.txt")
 output.disableAll()
 #output.enable(output.SerialNumberColumn)
 ###Setup turbulent magnetic field
@@ -44,7 +44,7 @@ vgrid.setReflective(True)
 b= 350*1e-6*gauss
 initTurbulence(vgrid, b, lMin, lMax, -11./3., randomSeed)
 TurbField = MagneticFieldGrid(vgrid)
-Magfiela.addField(TurbField)
+Magfield.addField(TurbField)
 output.enable(output.CurrentIdColumn)
 output.enable(output.CurrentEnergyColumn)
 output.setEnergyScale(TeV)

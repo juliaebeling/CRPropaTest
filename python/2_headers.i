@@ -396,6 +396,7 @@
 %include "crpropa/module/EMCascade.h"
 %include "crpropa/module/PhotonEleCa.h"
 %include "crpropa/module/PhotonOutput1D.h"
+%include "crpropa/module/CreateElectrons.h"
 %include "crpropa/module/NuclearDecay.h"
 %include "crpropa/module/HadronicInteraction.h"
 %include "crpropa/module/MassDis.h"
