@@ -5,7 +5,7 @@ import numpy as np
 import math
 
 #Number of particles
-particles = 500
+particles = 10000
 
 
 
@@ -14,7 +14,7 @@ c = Candidate()
 
 #Radius of Sphere
 
-r= 162* pc
+r= 162*pc
 
 
 
@@ -24,7 +24,7 @@ steplength = 0.1
 
 sl=SourceList()
 origin = Vector3d(0)
-
+b= Vector3d(0)
 for i in range (2600):
     s=Source()
     phi = 2*M_PI*rd.random()
@@ -32,7 +32,6 @@ for i in range (2600):
     a= Vector3d (np.cos(phi)*RandRadius, np.sin(phi)*RandRadius, (-0.5+rd.random())*120*pc)
     s.add(SourcePosition(a))
     s.add(SourceParticleType(nucleusId(1,1)))
-    #s.add(SourceParticleType(nucleusId(11,11)))
     s.add(SourcePowerLawSpectrum(1*TeV, 10000*TeV, 2.0))
     sl.add(s)
 
@@ -40,7 +39,8 @@ for i in range (2600):
 
 
 
-output = TextOutput("Simulations250418/TestEnergyChange.txt")
+output = TextOutput("Simulations070518/onlyHIsource.txt")
+output2 = TextOutput("Simulations070518/onlyHIObserverSphere.txt")
 output.disableAll()
 output.enable(output.SerialNumberColumn)
 output.enable(output.CurrentIdColumn)
@@ -49,14 +49,26 @@ output.enable(output.CurrentPositionColumn)
 output.enable(output.SourcePositionColumn)
 output.setEnergyScale(TeV)
 output.setLengthScale(pc)
+output2.disableAll()
+output2.enable(output.SerialNumberColumn)
+output2.enable(output.CurrentIdColumn)
+output2.enable(output.CurrentEnergyColumn)
+output2.enable(output.CurrentPositionColumn)
+output2.enable(output.SourcePositionColumn)
+output2.setEnergyScale(TeV)
+output2.setLengthScale(pc)
 obs=Observer()
-obs.add(ObserverLargeSphere(Vector3d(0), r))
-#obs.add(ObserverTimeEvolution(0*pc, 500*pc, 2))
-#obs.setDeactivateOnDetection(False)
+obs2=Observer()
+obs.add(ObserverLargeSphere(b, r))
+#obs.add(ObserverTimeEvolution(10*kpc, 1*kpc, 1))
+obs2.add(ObserverTimeEvolution(0*kpc, 5*kpc, 1))
+obs.setDeactivateOnDetection(False)
+obs2.setDeactivateOnDetection(False)
 obs.onDetection(output)
+obs2.onDetection(output2)
 
 MagField = MagneticFieldList()
-randomSeed = 27
+randomSeed = 23
 lMin=0.04 * pc
 lMax=2.*pc
 l= turbulentCorrelationLength(lMin, lMax, -11./3.)
@@ -72,19 +84,20 @@ mod_PropCK=PropagationCK(MagField, 0.5, steplength * pc, 100 * steplength * pc)
 #m.add(SimplePropagation(steplength*kpc, steplength*kpc))
 m.add(mod_PropCK)
 m.add(HadronicInteraction())
-m.add(EMInverseComptonScattering(CMB, True, 1))
-#.add(EMDoublePairProduction(CMB, True, 1))
-m.add(EMPairProduction(CMB, True, 1))
+#m.add(EMInverseComptonScattering(CMB, True, 1))
+#m.add(EMDoublePairProduction(CMB, True, 1))
+#m.add(EMPairProduction(CMB, True, 1))
 #m.add(EMTripletPairProduction(CMB, True, 1))
 #m.add(ElasticScattering(CMB))
-m.add(ElectronPairProduction(CMB, True, 1))
+#m.add(ElectronPairProduction(CMB, True, 1))
 #m.add(NuclearDecay())
 #m.add(CreateElectrons())
-m.add(SynchrotronRadiation(TurbField, True, 1))
+#m.add(SynchrotronRadiation(TurbField, True, 1))
 #m.add(PhotoDisintegration(CMB, True, 1))
 #m.add(PhotoPionProduction(CMB, True, True, False, 1, False))
 m.add(obs)
-m.add(MaximumTrajectoryLength(1*kpc))
+m.add(obs2)
+m.add(MaximumTrajectoryLength(4.0001*kpc))
 m.setShowProgress(True)
 m.run(sl, particles, True)
 

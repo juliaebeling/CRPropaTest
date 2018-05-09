@@ -60,7 +60,7 @@ namespace crpropa {
     }
     
     double HadronicInteraction::number_e(double energy) const{
-        double x=1/1000.;
+        double x=1/100000.;
         double i=1/100000.;
         double y=0;
         double j=0;
@@ -90,7 +90,7 @@ namespace crpropa {
     }
     
     double HadronicInteraction::number_my1(double energy) const{
-        double x=1/(1000.);
+        double x=1/(100000.);
         double i=1/100000.;
         double y=0;
         double j=0;
@@ -116,7 +116,7 @@ namespace crpropa {
     }
     
     double HadronicInteraction::number_gamma(double energy) const{
-        double x=1/1000.;
+        double x=1/100000.;
         double i=1/100000.;
         double y=0;
         double j=0;
@@ -342,23 +342,23 @@ namespace crpropa {
             j=0;
             if (iG <= NG){
                 do{
-                double x=random.rand()*(-3);
+                double x=random.rand()*(-5);
                     
                     j++;
                 Eout=pow(10, x)*energy;
                 double E=distribution_gamma(energy, pow(10, x));
-                double Emax=distribution_gamma(energy, 0.001);
+                double Emax=distribution_gamma(energy, 0.00001);
                 double y=random.rand()*Emax;
-                    if(j == 10000){
-                        x=-5;
-                        Eout=pow(10, x)*energy;
-                        candidate->addSecondary(22, Eout, pos);
-                        Eg=Eg+Eout;
-                        i++;
-                        iG++;
-                        //std::cout<<(Ee+Ene+Emt+Emo+Eg)/energy<<std::endl;
-                        std::cout<<"GammaE"<<std::endl;
-                    }
+//                    if(j == 10000){
+//                        x=-5;
+//                        Eout=pow(10, x)*energy;
+//                        candidate->addSecondary(22, Eout, pos);
+//                        Eg=Eg+Eout;
+//                        i++;
+//                        iG++;
+//                        //std::cout<<(Ee+Ene+Emt+Emo+Eg)/energy<<std::endl;
+//                        std::cout<<"GammaE"<<std::endl;
+//                    }
                 if (y < E and (Ee+Ene+Emt+Emo+Eg+Eout)<energy ){
                     candidate->addSecondary(22, Eout, pos);
                     Eg=Eg+Eout;
@@ -375,23 +375,23 @@ namespace crpropa {
             if (imy1 <= Nmy1){
                 do{
                 label3:
-                double x=-3+random.rand()*(log(0.427)+3);
+                double x=-5+random.rand()*(log(0.427)+5);
                 double my=pow(10,x);
                     j++;
                 Eout=my*energy;
                 double E=distribution_my1(energy, my);
-                double Emax=distribution_my1(energy, 0.001);
+                double Emax=distribution_my1(energy, 0.00001);
                 double y=random.rand()*Emax;
-                if(j == 10000){
-                    x=-5;
-                    Eout=pow(10, x)*energy;
-                    candidate->addSecondary(14, Eout, pos);
-                    Emo=Emo+Eout;
-                    i++;
-                    imy1++;
-                    //std::cout<<(Ee+Ene+Emt+Emo+Eg)/energy<<std::endl;
-                    std::cout<<"My1"<<std::endl;
-                    }
+//                if(j == 10000){
+//                    x=-5;
+//                    Eout=pow(10, x)*energy;
+//                    candidate->addSecondary(14, Eout, pos);
+//                    Emo=Emo+Eout;
+//                    i++;
+//                    imy1++;
+//                    //std::cout<<(Ee+Ene+Emt+Emo+Eg)/energy<<std::endl;
+//                    std::cout<<"My1"<<std::endl;
+//                    }
                 if (y < E and (Ee+Ene+Emt+Emo+Eg+Eout)<energy){
                     candidate->addSecondary(12, Eout, pos);
                     Emo=Emo+Eout;
@@ -409,22 +409,22 @@ namespace crpropa {
             
             if (ie <= NE){
                 do{
-                double x=random.rand()*(-3);
+                double x=random.rand()*(-5);
                     j++;
                 Eout=pow(10, x)*energy;
                 double E=distribution_e(energy, pow(10, x));
-                double Emax=distribution_e(energy, 0.001);
+                double Emax=distribution_e(energy, 0.00001);
                 double y=random.rand()*Emax;
-                    if(j == 10000){
-                        x=-5;
-                        Eout=pow(10, x)*energy;
-                        candidate->addSecondary(11, Eout, pos);
-                        Ee=Ee+Eout;
-                        i++;
-                        ie++;
-                        //std::cout<<(Ee+Ene+Emt+Emo+Eg)/energy<<std::endl;
-                        std::cout<<"eE"<<std::endl;
-                                    }
+//                    if(j == 10000){
+//                        x=-5;
+//                        Eout=pow(10, x)*energy;
+//                        candidate->addSecondary(11, Eout, pos);
+//                        Ee=Ee+Eout;
+//                        i++;
+//                        ie++;
+//                        //std::cout<<(Ee+Ene+Emt+Emo+Eg)/energy<<std::endl;
+//                        std::cout<<"eE"<<std::endl;
+//                                    }
                 if (y < E and (Ee+Ene+Emt+Emo+Eg+Eout)<energy ){
                     candidate->addSecondary(11, Eout, pos);
                     Ee=Ee+Eout;
@@ -440,23 +440,23 @@ namespace crpropa {
         j=0;
             if (ien <= NEN){
                 do{
-            double x=random.rand()*(-3);
+            double x=random.rand()*(-5);
                     j++;
             Eout=pow(10, x)*energy;
             double E=distribution_e(energy, pow(10, x));
-            double Emax=distribution_e(energy, 0.001);
+            double Emax=distribution_e(energy, 0.00001);
             double y=random.rand()*Emax;
-                    if(j == 10000){
-                        x=-5;
-                        Eout=pow(10, x)*energy;
-                        y=distribution_gamma(energy, pow(10, x));
-//                        candidate->addSecondary(12, Eout, pos);
-                        Ene=Ene+Eout;
-                        i++;
-                        ien++;
-                        //std::cout<<(Ee+Ene+Emt+Emo+Eg)/energy<<std::endl;
-                        std::cout<<"neE"<<std::endl;
-                        }
+//                    if(j == 10000){
+//                        x=-5;
+//                        Eout=pow(10, x)*energy;
+//                        y=distribution_gamma(energy, pow(10, x));
+////                        candidate->addSecondary(12, Eout, pos);
+//                        Ene=Ene+Eout;
+//                        i++;
+//                        ien++;
+//                        //std::cout<<(Ee+Ene+Emt+Emo+Eg)/energy<<std::endl;
+//                        std::cout<<"neE"<<std::endl;
+//                        }
             if (y < E and (Ee+Ene+Emt+Emo+Eg+Eout)<energy){
 //                candidate->addSecondary(12, Eout, pos);
                 Ene=Ene+Eout;
@@ -472,22 +472,22 @@ namespace crpropa {
             test=imy2;
             if(imy2 <= Nmy2){
                 do{
-            double x=random.rand()*(-3);
+            double x=random.rand()*(-5);
                     j++;
             Eout=pow(10, x)*energy;
             double E=distribution_e(energy, pow(10, x));
-            double Emax=distribution_e(energy, 0.001);
+            double Emax=distribution_e(energy, 0.00001);
             double y=random.rand()*Emax;
-                    if(j == 10000){
-                        x=-5;
-                        Eout=pow(10, x)*energy;
-                        candidate->addSecondary(14, Eout, pos);
-                        Emt=Emt+Eout;
-                        i++;
-                        imy2++;
-                        //std::cout<<(Ee+Ene+Emt+Emo+Eg)/energy<<std::endl;
-                        std::cout<<"my2E"<<std::endl;
-                        }
+//                    if(j == 10000){
+//                        x=-5;
+//                        Eout=pow(10, x)*energy;
+//                        candidate->addSecondary(14, Eout, pos);
+//                        Emt=Emt+Eout;
+//                        i++;
+//                        imy2++;
+//                        //std::cout<<(Ee+Ene+Emt+Emo+Eg)/energy<<std::endl;
+//                        std::cout<<"my2E"<<std::endl;
+//                        }
             if (y < E and (Ee+Ene+Emt+Emo+Eg+Eout)<energy){
                 candidate->addSecondary(14, Eout, pos);
                 Emt=Emt+Eout;
