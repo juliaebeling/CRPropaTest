@@ -34,6 +34,8 @@ std::string Source::getDescription() const {
 	return ss.str();
 }
 
+
+
 // SourceList------------------------------------------------------------------
 void SourceList::add(Source* source, double weight) {
 	sources.push_back(source);
@@ -335,7 +337,80 @@ void SourceUniformCylinder::setDescription() {
 	description = ss.str();
 }
 
-// ---------------------------------------------------------------------------
+
+    // ---------------------------------------------------------------------------
+//    SourceMSPDistribution::SourceMSPDistribution(double height, double radius) :    height(height), radius(radius){
+//    }
+//
+//    Vector3d SourceMSPDistribution::MakePosition(double height, double radius) const{
+//        Random &random = Random::instance();
+//        int i=0;
+//        Vector3d pos(0,0,0)
+//        double phi=random.rand()*2*pi;
+//        int j=0;
+//            do{
+//                double r = random.rand()* radius;
+//                double yr = random.rand();
+//                double Fr=exp(-r*r/(2*4.2*kpc));
+//                if (Fr < yr){
+//                    pos=(cos(phi)*r, sin(phi)*r, 0);
+//                    j++;
+//                }
+//            }while(j==0)
+//                do{
+//                    double z = random.rand()* height;
+//                    double yz = random.rand();
+//                    double Fz=exp(z/(0.4*z));
+//                    if (Fz < yz){
+//                        pos= pos + (0,0,z);
+//                        j=j++;
+//
+//                    }
+//                }while(j==1)
+//                    return pos;
+//    }
+//
+//    void SourceMSPDistribution::prepareParticle(ParticleState& particle) const {
+//        Random &random = Random::instance();
+//        int i=0;
+//        Vector3d pos(0,0,0)
+//        double phi=random.rand()*2*pi;
+//        do{
+//            int j=0;
+//        do{
+//        double r = random.rand()* radius;
+//        double yr = random.rand();
+//        double Fr=exp(-r*r/(2*4.2*kpc));
+//            if (Fr < yr){
+//                pos=(cos(phi)*r, sin(phi)*r, 0);
+//                j++;
+//            }
+//            }while(j==0)
+//        do{
+//            double z = random.rand()* height;
+//            double yz = random.rand();
+//            double Fz=exp(z/(0.4*z));
+//            if (Fz < yz){
+//                    pos= pos + (0,0,z);
+//                    j=j++;
+//
+//                    }
+//                }while(j==1)
+//        i++;
+//        particle.setPosition(pos);
+//
+//    }
+    
+//    void SourceMSPDistribution::setDescription() {
+//        std::stringstream ss;
+//        ss << "MSPDistribution follwing Hooper et al. (2015) ";
+//        ss << "number of sources = " << number<< " and ";
+//        ss << "radius = " << radius / kpc << " kpc and";
+//        ss << "height = " << height / kpc << " kpc\n";
+//        description = ss.str();
+//    }
+//
+    // ---------------------------------------------------------------------------
 SourceSNRDistribution::SourceSNRDistribution() :
     R_earth(8.5*kpc), beta(3.53), Zg(0.3*kpc) {
 	set_frMax(8.5*kpc, 3.53);

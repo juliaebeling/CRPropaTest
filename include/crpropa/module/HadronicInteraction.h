@@ -27,6 +27,7 @@ public:
 	double CrossSection_Carceller(double energy) const;
 	double CrossSection_Kelner(double energy) const;
 	double CrossSection_Galprop(double energy) const;
+    crpropa::Vector3d Position(double height, double radius) const;
 	//~ double counter(Candidate *candidate, double density) const;
 	//~ double counterPion(Candidate *candidate, double density) const;
 };

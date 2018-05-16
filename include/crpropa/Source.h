@@ -24,6 +24,7 @@ public:
 	virtual void prepareParticle(ParticleState& particle) const {};
 	virtual void prepareCandidate(Candidate& candidate) const;
 	std::string getDescription() const;
+
 };
 
 

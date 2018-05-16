@@ -17,6 +17,42 @@ namespace crpropa {
         setDescription("HadronicInteraction");
     }
     
+    Vector3d HadronicInteraction::Position(double height, double radius) const{
+        Random &random = Random::instance();
+        int i=0;
+        Vector3d pos(0,0,0);
+        double phi=random.rand()*2*M_PI;
+        int j=0;
+        do{
+            double r = random.rand()* radius;
+            double yr = random.rand();
+            double Fr=exp(-r*r/(2*4.2*4.2*kpc*kpc));
+            
+            if (yr < Fr){
+                pos=Vector3d(cos(phi)*r, sin(phi)*r, 0);
+                j++;
+            }
+        }while(j==0);
+        do{
+            double z = random.rand()* height;
+            std::cout << "z=" << z / kpc << std::endl;
+            double yz = random.rand();
+             std::cout << "yz=" << yz << std::endl;
+            double Fz=exp(-z/(0.4*kpc));
+            std::cout << "Fz=" << Fz << std::endl;
+            if (yz < Fz){
+                double a = random.rand();
+                if (a <= 0.5){
+                    z=-z;
+                }
+                pos= pos + Vector3d(0,0,z);
+                j++;
+                
+            }
+        }while(j==1);
+        return pos;
+    }
+    
     //Energy distribution for pions
     
     double HadronicInteraction::distribution_pi(double energy, double x) const{
@@ -203,9 +239,9 @@ namespace crpropa {
         double jcap=1;
         
         
-        if (id == 1000010010) {
-            cs_inel=CrossSection_Galprop(energy);
-        }
+//        if (id == 1000010010) {
+//            cs_inel=CrossSection_Galprop(energy);
+//        }
         
         if (id == 1000010010) {
             cs_inel=CrossSection_Kelner(energy);

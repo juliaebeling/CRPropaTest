@@ -3,7 +3,7 @@ from pylab import *
 import random as rd
 import numpy as np
 import math
-
+HI=HadronicInteraction()
 #Number of particles
 particles = 10000
 
@@ -13,29 +13,26 @@ c = Candidate()
 
 #Radius of Sphere
 
-r= 162*pc
+r= 200*pc
 
 #Steplength
-steplength = 10
+steplength = 1
 
 #Initialise Sourcelist
 sl=SourceList()
 origin = Vector3d(0)
 
-#Create 2600 Sources
-for i in range (2600):
+#Create Sources
+#Calculated by Integeral
+for i in range (50):
     s=Source()
-    #    phi = 2*M_PI*rd.random()
-    #    RandRadius = 150*pc*pow(rd.random(), 1. / 2.)
-    #    a= Vector3d (np.cos(phi)*RandRadius, np.sin(phi)*RandRadius, (-0.5+rd.random())*120*pc)
-    #    s.add(SourcePosition(a))
-    s.add(SourceUniformCylinder(Vector3d(0,0,-60*pc), 120*pc, 150*pc))
+    s.add(SourcePosition(HI.Position(120*pc,200*pc)))
     s.add(SourceParticleType(nucleusId(1,1)))
-    s.add(SourcePowerLawSpectrum(1*TeV, 10000*TeV, 2.0))
+    s.add(SourcePowerLawSpectrum(1*TeV, 10000*TeV, -2.0))
     sl.add(s)
 
 #Create output1
-output = TextOutput("Simulations100518/OSsL10.txt")
+output = TextOutput("Simulations150518/1_OS.txt")
 output.disableAll()
 output.enable(output.SerialNumberColumn)
 output.enable(output.CurrentIdColumn)
@@ -52,7 +49,7 @@ obs.onDetection(output)
 
 
 #Create output2
-output2 = TextOutput("Simulations100518/TOsL10.txt")
+output2 = TextOutput("Simulations150518/1_Source.txt")
 output2.disableAll()
 output2.enable(output.SerialNumberColumn)
 output2.enable(output.CurrentIdColumn)
@@ -62,11 +59,29 @@ output2.enable(output.SourcePositionColumn)
 output2.setEnergyScale(TeV)
 output2.setLengthScale(pc)
 
-#Create Time Evolution (original and 5 kpc)
+#Create Time Evolution Source
 obs2=Observer()
-obs2.add(ObserverTimeEvolution(0, 5*kpc, 1))
+obs2.add(ObserverTimeEvolution(0, 10*kpc, 1))
 obs2.setDeactivateOnDetection(False)
 obs2.onDetection(output2)
+
+#Create output3 5 kpc
+output3 = TextOutput("Simulations150518/1_5kpc.txt")
+output3.disableAll()
+output3.enable(output.SerialNumberColumn)
+output3.enable(output.CurrentIdColumn)
+output3.enable(output.CurrentEnergyColumn)
+output3.enable(output.CurrentPositionColumn)
+output3.enable(output.SourcePositionColumn)
+output3.setEnergyScale(TeV)
+output3.setLengthScale(pc)
+
+#Create Time Evolution kpc
+obs3=Observer()
+obs3.add(ObserverTimeEvolution(5*kpc, 10*kpc, 1))
+obs3.setDeactivateOnDetection(False)
+obs3.onDetection(output3)
+
 
 #Initiate turbulent magnetic field
 MagField = MagneticFieldList()
@@ -77,7 +92,7 @@ l= turbulentCorrelationLength(lMin, lMax, -11./3.)
 spacing=0.01*pc
 vgrid = VectorGrid(origin, 600, spacing)
 vgrid.setReflective(True)
-b= 350*1e-6*gauss
+b= 10*1e-6*gauss
 initTurbulence(vgrid, b, lMin, lMax, -11./3., randomSeed)
 TurbField = MagneticFieldGrid(vgrid)
 MagField.addField(TurbField)
@@ -90,23 +105,26 @@ m.add(mod_PropCK)
 
 #Interaction
 m.add(HadronicInteraction())
-m.add(EMInverseComptonScattering(CMB, True, 1))
-m.add(EMDoublePairProduction(CMB, True, 1))
-m.add(EMPairProduction(CMB, True, 1))
-m.add(EMTripletPairProduction(CMB, True, 1))
-m.add(ElasticScattering(CMB))
-m.add(ElectronPairProduction(CMB, True, 1))
+#m.add(EMInverseComptonScattering(CMB, True, 1))
+#m.add(EMDoublePairProduction(CMB, True, 1))
+#m.add(EMPairProduction(CMB, True, 1))
+#m.add(EMTripletPairProduction(CMB, True, 1))
+#m.add(ElasticScattering(CMB))
+#m.add(ElectronPairProduction(CMB, True, 1))
 #m.add(SynchrotronRadiation(TurbField, True, 1))
-m.add(PhotoDisintegration(CMB, True, 1))
-m.add(PhotoPionProduction(CMB, True, True, False, 1, False))
+#m.add(PhotoDisintegration(CMB, True, 1))
+#m.add(PhotoPionProduction(CMB, True, True, False, 1, False))
 
 #Observer
 m.add(obs)
 m.add(obs2)
-m.add(MaximumTrajectoryLength(5.0001*kpc))
+m.add(obs3)
+m.add(MaximumTrajectoryLength(6*kpc))
 
 m.setShowProgress(True)
 m.run(sl, particles, True)
+
+
 
 
 
